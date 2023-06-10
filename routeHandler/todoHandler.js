@@ -5,8 +5,8 @@ const todoSchema=require('../schemas/todoSchema');
 const Todo=new mongoose.model("Todo",todoSchema);
 
 //Get all the todos
-router.get('/',async(req,res)=>{
-    await Todo.find({status:'active'})
+router.get('/',(req,res)=>{
+    Todo.find({status:'active'})
     .then((data)=>{
         res.status(200).json({
             message:"These are the active todos",
@@ -22,18 +22,17 @@ router.get('/',async(req,res)=>{
 
 //Get a the todo by id
 router.get('/:id',async(req,res)=>{
-    await Todo.findById({_id:req.params.id})
-    .then((data)=>{
+    try{
+        const data=await Todo.findById({_id:req.params.id})
         res.status(200).json({
             message:"This is the required todo",
             result:data
         })
-    })
-    .catch((err)=>{
+    }catch(err){
         res.status(500).json({
             error:err,
         })
-    })
+    }
 })
 
 //post a todo
